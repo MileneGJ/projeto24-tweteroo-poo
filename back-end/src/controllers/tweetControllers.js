@@ -1,18 +1,20 @@
-import * as tweetService from "../services/tweetServices.js";
+import tweetServices from "../services/tweetServices.js";
 
-export function postTweet(req, res) {
-  tweetService.addNewTweet(req.body);
-  res.status(201).send("OK, seu tweet foi criado");
-}
+const tweetController = {
+  postTweet: function (req, res) {
+    tweetServices.addNewTweet(req.body);
+    res.status(201).send("OK, seu tweet foi criado");
+  },
+  getTweetsFromUser: function (req, res) {
+    const { username } = req.params;
+    const tweetsDoUsuario = tweetServices.getTweetsFromUser(username);
+    res.status(200).send(tweetsDoUsuario);
+  },
+  getAllTweets: function (req, res) {
+    const { page } = req.query;
+    const tweets = tweetServices.getTweets(page);
+    res.status(200).send(tweets);
+  },
+};
 
-export function getTweetsFromUser(req, res) {
-  const { username } = req.params;
-  const tweetsDoUsuario = tweetService.getTweetsFromUser(username);
-  res.status(200).send(tweetsDoUsuario);
-}
-
-export function getAllTweets(req, res) {
-  const { page } = req.query;
-  const tweets = tweetService.getTweets(page);
-  res.status(200).send(tweets);
-}
+export default tweetController;

@@ -1,11 +1,13 @@
-const usuarios = [];
+import client from "../database/database.js";
 
-export function createUser(user) {
-  console.log(usuarios);
-  usuarios.push(user);
-}
+const userRepository = {
+  client,
+  createUser: function (user) {
+    this.client.users.create(user);
+  },
+  findByName: function (name) {
+    return this.client.users.findByName(name);
+  },
+};
 
-export function findByName(name) {
-  console.log(usuarios);
-  return usuarios.find((user) => user.username === name);
-}
+export default userRepository;

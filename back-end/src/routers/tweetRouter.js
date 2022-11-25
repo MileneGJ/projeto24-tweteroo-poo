@@ -1,5 +1,5 @@
 import { Router } from "express";
-import * as tweetController from "../controllers/tweetControllers.js";
+import tweetController from "../controllers/tweetControllers.js";
 import validateSchema from "../middleware/validateSchema.js";
 
 const tweetRouter = Router();

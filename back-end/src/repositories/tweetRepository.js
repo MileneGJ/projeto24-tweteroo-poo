@@ -1,14 +1,16 @@
-const tweets = [];
+import client from "../database/database.js";
 
-export function createTweet(tweet) {
-  tweets.push(tweet);
-}
+const tweetRepository = {
+  client,
+  createTweet: function (tweet) {
+    this.client.tweets.create(tweet);
+  },
+  findByUser: function (username) {
+    return this.client.tweets.findByUser(username);
+  },
+  findAllTweets: function () {
+    return this.client.tweets.find();
+  },
+};
 
-export function findByUser(username) {
-  return tweets.filter((t) => t.username === username);
-}
-
-export function findAllTweets() {
-  console.log(tweets);
-  return tweets;
-}
+export default tweetRepository;

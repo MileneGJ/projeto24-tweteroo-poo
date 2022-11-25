@@ -1,31 +1,34 @@
-import * as tweetRepository from "../repositories/tweetRepository.js";
-import * as userService from "./userServices.js";
+import tweetRepository from "../repositories/tweetRepository.js";
+import userService from "./userServices.js";
 
-export function addNewTweet(body) {
-  const { tweet, username } = body;
-  const { avatar } = userService.getUserByName(username);
-  tweetRepository.createTweet({ username, tweet, avatar });
-}
+const tweetServices = {
+  tweetRepository,
+  userService,
+  addNewTweet: function (body) {
+    const { tweet, username } = body;
+    const { avatar } = this.userService.getUserByName(username);
+    this.tweetRepository.createTweet({ username, tweet, avatar });
+  },
+  getTweetsFromUser: function (username) {
+    return this.tweetRepository.findByUser(username);
+  },
+  reverseTweets: function (tweets) {
+    return [...tweets].reverse();
+  },
+  getTweets: function (page) {
+    if (page && page < 1) {
+      throw { status: "BadRequest", message: "Informe uma página válida!" };
+    }
+    const limite = 10;
+    const start = (page - 1) * limite;
+    const end = page * limite;
 
-export function getTweetsFromUser(username) {
-  return tweetRepository.findByUser(username);
-}
+    const tweets = this.tweetRepository.findAllTweets();
+    if (tweets.length <= 10) {
+      return this.reverseTweets(tweets);
+    }
+    return [...tweets].reverse().slice(start, end);
+  },
+};
 
-export function getTweets(page) {
-  if (page && page < 1) {
-    throw { status: "BadRequest", message: "Informe uma página válida!" };
-  }
-  const limite = 10;
-  const start = (page - 1) * limite;
-  const end = page * limite;
-
-  const tweets = tweetRepository.findAllTweets();
-  if (tweets.length <= 10) {
-    return reverseTweets(tweets);
-  }
-  return [...tweets].reverse().slice(start, end);
-}
-
-function reverseTweets(tweets) {
-  return [...tweets].reverse();
-}
+export default tweetServices;
